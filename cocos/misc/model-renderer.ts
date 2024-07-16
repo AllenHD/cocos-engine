@@ -52,6 +52,8 @@ function getSkinPassIndex (subModel: SubModel): number {
  * @en Base class for all rendering components containing model.
  * @zh 所有包含 model 的渲染组件基类。
  */
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note: model的渲染组件基类 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 @ccclass('cc.ModelRenderer')
 export class ModelRenderer extends Renderer {
     /**

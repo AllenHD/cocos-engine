@@ -700,9 +700,17 @@ export class Director extends EventTarget {
                 }
             }
 
+            //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note: ui渲染循环入口 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+            /**
+             * 这里是渲染循环的入口，这是个切入口
+             */
             this.emit(Director.EVENT_BEFORE_DRAW);
+            // 更新 uiRendererManager 中的所有 dirty renderer
             uiRendererManager.updateAllDirtyRenderers();
+
+            // 每帧执行渲染流程的入口函数
             this._root!.frameMove(dt);
+            
             this.emit(Director.EVENT_AFTER_DRAW);
 
             Node.resetHasChangedFlags();

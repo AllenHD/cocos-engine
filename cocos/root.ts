@@ -65,6 +65,8 @@ export interface ISceneInfo {
  * @en The root manager of the renderer which manages all device resources and the render pipeline.
  * @zh 基础渲染器管理类，管理所有设备相关的资源创建以及渲染管线。
  */
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note:基础渲染器管理类  ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 export class Root {
     /**
      * @en The GFX device
@@ -481,7 +483,10 @@ export class Root {
      * @zh 用于每帧执行渲染流程的入口函数
      * @param deltaTime @en The delta time since last update. @zh 距离上一帧间隔时间
      */
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note: 每帧 渲染入口 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
     public frameMove (deltaTime: number): void {
+
+        // 帧时间: 距离上一帧间隔时间
         this._frameTime = deltaTime;
 
         /*
@@ -495,8 +500,13 @@ export class Root {
         }
         */
 
+        // 累计帧数
         ++this._frameCount;
+        // 累计时间
         this._cumulativeTime += deltaTime;
+        
+
+        // 统计FPS
         this._fpsTime += deltaTime;
         if (this._fpsTime > 1.0) {
             this._fps = this._frameCount;
@@ -505,8 +515,10 @@ export class Root {
         }
 
         if (globalThis.__globalXR?.isWebXR) {
+            // 推测: 这里是处理WebXR的帧渲染 可以不看
             this._doWebXRFrameMove();
         } else {
+            // 重点来了，三个函数 开始、处理、结束。
             this._frameMoveBegin();
             this._frameMoveProcess();
             this._frameMoveEnd();
@@ -713,6 +725,7 @@ export class Root {
         }
     }
 
+    // 不用看了：WebXR的帧渲染
     private _doWebXRFrameMove (): void {
         const xr = globalThis.__globalXR;
         if (!xr) {
@@ -779,6 +792,12 @@ export class Root {
         }
     }
 
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note:Root 重点看 渲染流程 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+    /**
+     * 帧渲染开始，主要是移除批次
+     * 猜测：应该是重置状态。
+     */
     private _frameMoveBegin (): void {
         for (let i = 0; i < this._scenes.length; ++i) {
             this._scenes[i].removeBatches();
@@ -787,48 +806,67 @@ export class Root {
         this._cameraList.length = 0;
     }
 
+
+    /**
+     * 帧渲染处理阶段
+     * 主要是处理 各个场景状态，以及相机的更新等
+     */
     private _frameMoveProcess (): void {
         const { director } = cclegacy;
         const windows = this._windows;
         const cameraList = this._cameraList;
 
+        // 提取所有窗口的相机(可用的相机 enabled = true的)
         for (let i = 0; i < windows.length; i++) {
             const window = windows[i];
             window.extractRenderCameras(cameraList);
         }
 
         if (this._pipeline && cameraList.length > 0) {
+            // 提取下一个缓冲区。推测：设备至少提供两个缓冲区，一般前一个缓冲显示，后一个缓冲区用于下一帧的绘制，交替使用。
             this._device.acquire([deviceManager.swapchain]);
             const scenes = this._scenes;
+            // 总帧数
             const stamp = director.getTotalFrames() as number;
 
+            // 批处理，推测: _batcher的类型是Batcher2D，Batcher2D是负责更新canvas下ui组件的渲染数据
             if (this._batcher) {
                 this._batcher.update();
                 this._batcher.uploadBuffers();
             }
 
+            // scenes 更新
             for (let i = 0; i < scenes.length; i++) {
                 scenes[i].update(stamp);
             }
         }
     }
 
+    /**
+     * 这里主要是，提交 ，渲染管线的渲染
+     */
     private _frameMoveEnd (): void {
         const { director, Director } = cclegacy;
         const cameraList = this._cameraList;
         if (this._pipeline && cameraList.length > 0) {
             director.emit(Director.EVENT_BEFORE_COMMIT);
+            // 相机优先级排序
             cameraList.sort((a: Camera, b: Camera): number => a.priority - b.priority);
 
+            // 这里暂时没看，应该是一些几何运算相关的更新
             for (let i = 0; i < cameraList.length; ++i) {
                 cameraList[i].geometryRenderer?.update();
             }
+
+            // 提交给渲染管线
             director.emit(Director.EVENT_BEFORE_RENDER);
             this._pipeline.render(cameraList);
             director.emit(Director.EVENT_AFTER_RENDER);
+            
+            // 切换缓冲区
             this._device.present();
         }
-
+        // 重置 batcher
         if (this._batcher) this._batcher.reset();
     }
 

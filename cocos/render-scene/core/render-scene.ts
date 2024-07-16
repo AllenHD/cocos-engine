@@ -197,6 +197,7 @@ export class RenderScene {
      * @returns void
      */
     public update (stamp: number): void {
+        // 前面的更新代码 ...
         const mainLight = this._mainLight;
         if (mainLight) {
             mainLight.update();
@@ -235,6 +236,7 @@ export class RenderScene {
                 model.updateUBOs(stamp);
             }
         }
+        // 更新 LOD 状态
         this._lodStateCache.updateLodState();
     }
 

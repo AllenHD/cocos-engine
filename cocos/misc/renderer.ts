@@ -54,6 +54,26 @@ const { ccclass, serializable, disallowMultiple, type, displayOrder, displayName
  */
 @ccclass('cc.Renderer')
 @disallowMultiple
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note: 渲染组件基类 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+/**
+ * 此类比较简单，就是管理共享材质和材质实例，以及获取渲染材质。没啥可看的，就是一些属性的 get 和 set 方法。
+ * 
+ * 简单说一下属性：
+ * 1、sharedMaterial 和 sharedMaterials：这些属性用于获取和设置共享材质。共享材质是所有使用该材质资源的组件实例共享的实例对象，修改共享材质会影响所有使用它的组件实例。
+ * sharedMaterial 返回第一个共享材质，而 sharedMaterials 返回所有共享材质。
+ * 
+ * 2、material 和 materials：这些属性用于获取和设置材质实例。材质实例是专为组件对象创建的独立实例，修改材质实例只会影响当前组件对象。
+ * material 返回第一个材质实例，而 materials 返回所有材质实例。
+ */
+
+/**
+ * 强调一下重点
+ * 下面是这个组件所管理的各种材质属性的解释，需要正确区分并小心使用：
+ * - [[sharedMaterials]] 是共享材质，所有使用此材质资源的组件实例都默认使用材质的共享实例对象，所有修改都会影响所有使用它的组件实例。
+ * - [[materials]] 是专为组件对象创建的独立材质实例，所有修改仅会影响当前组件对象。
+ * - 使用 [[getRenderMaterial]] 获取的渲染材质是用于实际渲染流程的材质对象，当存在材质实例的时候，永远使用材质实例。
+ * 默认情况下，渲染组件使用共享材质进行渲染，材质实例也不会被创建出来。仅在用户通过 [[material]]，[[materials]] 和 [[getMaterialInstance]] 接口获取材质时才会创建材质实例。
+ */
 export class Renderer extends Component {
     /**
      * @en Get the default shared material
@@ -168,6 +188,7 @@ export class Renderer extends Component {
      * new material instance will be created automatically if the sub-model is already using one.
      * @zh 设置指定子模型的 sharedMaterial，如果对应位置有材质实例则会创建一个对应的材质实例。
      */
+    // 字面意思：设置共享材质
     public setSharedMaterial (material: Material | null, index: number): void {
         if (material && material instanceof MaterialInstance) {
             errorID(12012);

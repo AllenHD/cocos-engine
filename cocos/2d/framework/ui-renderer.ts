@@ -58,6 +58,8 @@ ccenum(ColorMask);
  * @zh
  * 实例后的材质的着色器属性类型。
  */
+// 推测：应该是内置的材质类型，通过类型可以直接拿到内置材质的实例
+// 见 UIRenderer._updateBuiltinMaterial() 方法
 export enum InstanceMaterialType {
     /**
      * @en
@@ -115,6 +117,8 @@ export enum InstanceMaterialType {
 @ccclass('cc.UIRenderer')
 @requireComponent(UITransform)
 @executeInEditMode
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 【WW】note: UI渲染组件基类 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 export class UIRenderer extends Renderer {
     /**
      * @en The blend factor enums
@@ -122,18 +126,21 @@ export class UIRenderer extends Renderer {
      * @see [[gfx.BlendFactor]]
      * @internal
      */
+    // 混合模式 你应该懂得：混合模式是指将两个图层的颜色值混合在一起，最终显示在屏幕上的颜色值
     public static BlendState = BlendFactor;
     /**
      * @en The render data assembler
      * @zh 渲染数据组装器
      * @internal
      */
+    // 渲染数据组装器: 组装渲染数据用的
     public static Assembler: IAssemblerManager = null!;
     /**
      * @en The post render data assembler
      * @zh 后置渲染数据组装器
      * @internal
      */
+    // 后置渲染数据组装器: 组装额外的渲染数据用的
     public static PostAssembler: IAssemblerManager | null = null;
 
     constructor () {
@@ -145,6 +152,7 @@ export class UIRenderer extends Renderer {
     @visible(false)
     get sharedMaterials (): (Material | null)[] {
         // if we don't create an array copy, the editor will modify the original array directly.
+        // 防止编辑器下直接修改原数组
         return EDITOR && this._materials.slice() || this._materials;
     }
 
@@ -234,6 +242,7 @@ export class UIRenderer extends Renderer {
         this._renderEntity.setStencilStage(val);
     }
 
+    // _materials 解释：这个属性是一个数组，数组中存放的是材质实例
     @override
     protected _materials: (Material | null)[] = [];
     @type(Material)
