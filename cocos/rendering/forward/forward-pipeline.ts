@@ -53,8 +53,10 @@ export class ForwardPipeline extends RenderPipeline {
     @type([RenderTextureConfig])
     @serializable
     @displayOrder(2)
+    // 用于储存渲染纹理配置
     protected renderTextures: RenderTextureConfig[] = [];
 
+    // 用于储存处理后的渲染通道
     protected _postRenderPass: RenderPass | null = null;
 
     public get postRenderPass (): RenderPass | null {
@@ -99,6 +101,7 @@ export class ForwardPipeline extends RenderPipeline {
         return true;
     }
 
+    // 方法用于确保渲染尺寸足够大。它遍历所有摄像机，获取它们的窗口尺寸，并更新管线的宽度和高度，以确保能够容纳所有摄像机的渲染需求。
     protected _ensureEnoughSize (cameras: Camera[]): void {
         let newWidth = this._width;
         let newHeight = this._height;

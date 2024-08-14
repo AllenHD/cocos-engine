@@ -478,7 +478,10 @@ export abstract class RenderPipeline extends Asset implements IPipelineEvent, Pi
         if (cameras.length === 0) {
             return;
         }
+        // 更新几何信息
         this.updateGeometryRenderer(cameras); // for capability
+        
+        // begin 主要用于重置一些状态
         this._commandBuffers[0].begin();
         this.emit(PipelineEventType.RENDER_FRAME_BEGIN, cameras);
         this._ensureEnoughSize(cameras);

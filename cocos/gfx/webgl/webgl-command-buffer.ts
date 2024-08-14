@@ -300,6 +300,9 @@ export class WebGLCommandBuffer extends CommandBuffer {
         }
     }
 
+    /**
+     * 更新Buffer。
+     */
     public updateBuffer (buffer: Buffer, data: Readonly<BufferSource>, size?: number): void {
         if (this._type === CommandBufferType.PRIMARY && !this._isInRenderPass
             || this._type === CommandBufferType.SECONDARY) {
@@ -414,6 +417,9 @@ export class WebGLCommandBuffer extends CommandBuffer {
         textures?: Readonly<Texture[]>,
     ): void {}
 
+    /**
+     * 用于绑定当前的 GPU 状态到命令缓冲区中。这个函数的主要作用是将当前的管线状态、描述符集、动态偏移量和输入汇编器等信息打包成一个命令，并将其添加到命令包中，以便在后续的渲染过程中执行。
+     */
     protected bindStates (): void {
         const bindStatesCmd = this._cmdAllocator.bindStatesCmdPool.alloc(WebGLCmdBindStates);
 

@@ -476,10 +476,29 @@ export class WebGLCmdBeginRenderPass extends WebGLCmdObject {
 }
 
 export class WebGLCmdBindStates extends WebGLCmdObject {
+    /**
+     * 当前绑定的图形管线状态
+     */
     public gpuPipelineState: IWebGLGPUPipelineState | null = null;
+
+    /**
+     * 当前绑定的输入汇编器状态
+     */
     public gpuInputAssembler: IWebGLGPUInputAssembler | null = null;
+
+    /**
+     * 当前绑定的描述符集数组
+     */
     public gpuDescriptorSets: IWebGLGPUDescriptorSet[] = [];
+
+    /**
+     * 当前动态偏移数组
+     */
     public dynamicOffsets: number[] = [];
+
+    /**
+     * 当前动态状态
+     */
     public dynamicStates: DynamicStates = new DynamicStates();
 
     constructor () {

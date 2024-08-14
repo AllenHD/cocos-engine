@@ -38,6 +38,7 @@ import {
  */
 export abstract class RenderPass extends GFXObject {
     protected _colorInfos: ColorAttachment[] = [];
+    // 深度模板信息
     protected _depthStencilInfo: DepthStencilAttachment | null = null;
     protected _subpasses: SubpassInfo[] = [];
     protected _hash = 0;
