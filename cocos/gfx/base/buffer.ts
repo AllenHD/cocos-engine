@@ -85,12 +85,19 @@ export abstract class Buffer extends GFXObject {
         return this._flags;
     }
 
+    // Buffer 使用类型 
     protected _usage: BufferUsage = BufferUsageBit.NONE;
+    // 内存使用方式
     protected _memUsage: MemoryUsage = MemoryUsageBit.NONE;
+    // Buffer 大小
     protected _size = 0;
+    // Buffer 步长
     protected _stride = 1;
+    // Buffer 条目数量
     protected _count = 0;
+    // Buffer 标志
     protected _flags: BufferFlags = BufferFlagBit.NONE;
+    // 是否是视图
     protected _isBufferView = false;
 
     constructor () {

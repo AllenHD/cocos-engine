@@ -25,6 +25,10 @@
 import { BufferSource, BufferInfo, BufferViewInfo } from '../base/define';
 import { Buffer } from '../base/buffer';
 
+/**
+ * 此类主要就是一个空的 Buffer 类。
+ * 猜测是为了在没有 Buffer 的情况下，也能够正常运行。
+ */
 export class EmptyBuffer extends Buffer {
     public initialize (info: Readonly<BufferInfo> | Readonly<BufferViewInfo>): void {
         if ('buffer' in info) { // buffer view

@@ -58,27 +58,31 @@ const deepCopy = <T extends ICopyable> (target: T[], source: T[], Ctor: Construc
  * @en Graphics object type
  * @zh 图形API对象的类型
  */
+/**
+ * 对象类型枚举
+ * @zh 对象类型枚举
+ */
 export enum ObjectType {
-    UNKNOWN,
-    SWAPCHAIN,
-    BUFFER,
-    TEXTURE,
-    RENDER_PASS,
-    FRAMEBUFFER,
-    SAMPLER,
-    SHADER,
-    DESCRIPTOR_SET_LAYOUT,
-    PIPELINE_LAYOUT,
-    PIPELINE_STATE,
-    DESCRIPTOR_SET,
-    INPUT_ASSEMBLER,
-    COMMAND_BUFFER,
-    QUEUE,
-    QUERY_POOL,
-    GLOBAL_BARRIER,
-    TEXTURE_BARRIER,
-    BUFFER_BARRIER,
-    COUNT,
+    UNKNOWN, // 未知类型
+    SWAPCHAIN, // 交换链
+    BUFFER, // 缓冲区
+    TEXTURE, // 纹理
+    RENDER_PASS, // 渲染过程
+    FRAMEBUFFER, // 帧缓冲
+    SAMPLER, // 采样器
+    SHADER, // 着色器
+    DESCRIPTOR_SET_LAYOUT, // 描述符集布局
+    PIPELINE_LAYOUT, // 管线布局
+    PIPELINE_STATE, // 管线状态
+    DESCRIPTOR_SET, // 描述符集
+    INPUT_ASSEMBLER, // 输入装配器
+    COMMAND_BUFFER, // 命令缓冲区
+    QUEUE, // 队列
+    QUERY_POOL, // 查询池
+    GLOBAL_BARRIER, // 全局屏障
+    TEXTURE_BARRIER, // 纹理屏障
+    BUFFER_BARRIER, // 缓冲区屏障
+    COUNT, // 类型数量
 }
 
 export enum Status {
@@ -353,15 +357,18 @@ export enum Type {
     COUNT,
 }
 
+/**
+ * 缓冲区使用标志位
+ */
 export enum BufferUsageBit {
     NONE = 0,
-    TRANSFER_SRC = 0x1,
-    TRANSFER_DST = 0x2,
-    INDEX = 0x4,
-    VERTEX = 0x8,
-    UNIFORM = 0x10,
-    STORAGE = 0x20,
-    INDIRECT = 0x40,
+    TRANSFER_SRC = 0x1,     // 用作传输源
+    TRANSFER_DST = 0x2,     // 用作传输目标
+    INDEX = 0x4,            // 用作索引缓冲区
+    VERTEX = 0x8,           // 用作顶点缓冲区
+    UNIFORM = 0x10,         // 用作Uniform缓冲区
+    STORAGE = 0x20,         // 用作存储缓冲区
+    INDIRECT = 0x40,        // 用作间接绘制缓冲区
 }
 
 export enum BufferFlagBit {
@@ -375,9 +382,14 @@ export enum MemoryAccessBit {
     READ_WRITE = READ_ONLY | WRITE_ONLY,
 }
 
+/**
+ * 内存使用标志位
+ */
 export enum MemoryUsageBit {
     NONE = 0,
+    // 用于不经常更新的资源，使用 MemoryUsageBit.DEVICE
     DEVICE = 0x1, // for rarely-updated resources, use MemoryUsageBit::DEVICE
+    // 用于经常更新的资源，使用 MemoryUsageBit.DEVICE | MemoryUsageBit.HOST
     HOST = 0x2,   // for frequently-updated resources, use MemoryUsageBit::DEVICE | MemoryUsageBit::HOST
 }
 
